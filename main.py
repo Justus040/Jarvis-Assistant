@@ -5,7 +5,7 @@ import os
 def install_requirements():
     """Installiere fehlende Pakete automatisch"""
     packages = [
-        'SpeechRecognition==3.10.0',
+        'SpeechRecognition==3.11.0',
         'pyttsx3==2.90'
     ]
     
@@ -19,7 +19,7 @@ def install_requirements():
         except ImportError:
             print(f"⬇️  Installiere {package_name}...")
             try:
-                subprocess.check_call([sys.executable, '-m', 'pip', 'install', package])
+                subprocess.check_call([sys.executable, '-m', 'pip', 'install', '--upgrade', package])
                 print(f"✅ {package_name} erfolgreich installiert")
             except subprocess.CalledProcessError:
                 print(f"❌ Fehler bei Installation von {package_name}")
