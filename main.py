@@ -5,7 +5,6 @@ import os
 def install_requirements():
     """Installiere fehlende Pakete automatisch"""
     packages = [
-        'google-cloud-speech==2.21.0',
         'pyttsx3==2.90'
     ]
     
@@ -30,8 +29,10 @@ def install_requirements():
 if __name__ == "__main__":
     install_requirements()
     
-    # Importiere jetzt die Hauptdatei
-    from jarvis import JarvisAssistant
+    # Starte die GUI Version
+    from jarvis_gui import JarvisGUI
+    import tkinter as tk
     
-    jarvis = JarvisAssistant()
-    jarvis.run()
+    root = tk.Tk()
+    app = JarvisGUI(root)
+    root.mainloop()
