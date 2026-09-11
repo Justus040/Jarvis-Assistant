@@ -6,8 +6,7 @@ def install_requirements():
     """Installiere fehlende Pakete automatisch"""
     packages = [
         'SpeechRecognition==3.10.0',
-        'pyttsx3==2.90',
-        'pyaudio==0.2.13'
+        'pyttsx3==2.90'
     ]
     
     print("🔍 Prüfe ob alle Pakete installiert sind...")
