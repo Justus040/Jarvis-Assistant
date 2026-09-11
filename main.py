@@ -5,7 +5,7 @@ import os
 def install_requirements():
     """Installiere fehlende Pakete automatisch"""
     packages = [
-        'SpeechRecognition==3.11.0',
+        'google-cloud-speech==2.21.0',
         'pyttsx3==2.90'
     ]
     
