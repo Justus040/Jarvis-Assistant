@@ -1,42 +1,30 @@
-import speech_recognition as sr
 import pyttsx3
 import datetime
 import os
-from settings import Settings
-from commands import CommandHandler
+from google.cloud import speech_v1
+import io
 
 class JarvisAssistant:
     def __init__(self):
-        self.settings = Settings()
-        self.recognizer = sr.Recognizer()
         self.engine = pyttsx3.init()
-        self.command_handler = CommandHandler(self.engine, self.settings)
         self.setup_tts()
+        self.client = speech_v1.SpeechClient()
         self.running = True
 
     def setup_tts(self):
         """Richte Text-to-Speech ein"""
-        self.engine.setProperty('rate', self.settings.speech_rate)
-        self.engine.setProperty('volume', self.settings.volume)
+        self.engine.setProperty('rate', 150)
+        self.engine.setProperty('volume', 0.9)
         
     def listen(self):
         """Höre auf Spracheinput"""
         try:
-            with sr.Microphone(device_index=self.settings.mic_index) as source:
-                print("🎤 Höre zu...")
-                self.engine.say("Ich bin bereit")
-                self.engine.runAndWait()
-                
-                audio = self.recognizer.listen(source, timeout=5)
-                text = self.recognizer.recognize_google(audio, language='de-DE')
-                print(f"Du: {text}")
-                return text.lower()
-        except sr.UnknownValueError:
-            self.speak("Entschuldigung, ich habe das nicht verstanden")
-            return None
-        except sr.RequestError:
-            self.speak("Internet-Fehler beim Spracherkennung")
-            return None
+            print("🎤 Höre zu...")
+            self.speak("Ich bin bereit")
+            
+            # Einfache Alternative: Benutzer-Input
+            text = input("Du: ")
+            return text.lower()
         except Exception as e:
             print(f"Fehler: {e}")
             return None
@@ -46,6 +34,24 @@ class JarvisAssistant:
         print(f"Jarvis: {text}")
         self.engine.say(text)
         self.engine.runAndWait()
+
+    def get_time(self):
+        """Gebe die aktuelle Uhrzeit aus"""
+        now = datetime.datetime.now()
+        return f"Es ist {now.strftime('%H:%M')} Uhr"
+
+    def handle_command(self, text):
+        """Verarbeite Befehle"""
+        if "uhrzeit" in text or "zeit" in text or "wie spät" in text:
+            return self.get_time()
+        elif "tag" in text or "datum" in text:
+            return f"Heute ist {datetime.datetime.now().strftime('%d.%m.%Y')}"
+        elif "hallo" in text or "hi" in text:
+            return "Hallo! Wie kann ich dir helfen?"
+        elif "hilfe" in text:
+            return "Ich kann dir die Uhrzeit sagen, das Datum anzeigen und mit dir reden. Frag mich nach der Zeit!"
+        else:
+            return f"Du hast gesagt: {text}"
 
     def run(self):
         """Starte den Hauptloop"""
@@ -58,7 +64,7 @@ class JarvisAssistant:
                     self.speak("Auf Wiedersehen!")
                     self.running = False
                 else:
-                    response = self.command_handler.handle(text)
+                    response = self.handle_command(text)
                     if response:
                         self.speak(response)
 
