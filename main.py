@@ -31,7 +31,7 @@ if __name__ == "__main__":
     install_requirements()
     
     # Importiere jetzt die Hauptdatei
-    from jarvis_main import JarvisAssistant
+    from jarvis import JarvisAssistant
     
     jarvis = JarvisAssistant()
     jarvis.run()
